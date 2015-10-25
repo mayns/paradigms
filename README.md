@@ -1,4 +1,3 @@
-# paradigms
-EDX course Paradigms of Computer Programming
+# Paradigms of Computer Programming
 
-All code writte in Oz language.
+All code is written in Oz language.
