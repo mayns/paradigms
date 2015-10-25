@@ -1,0 +1,32 @@
+declare
+fun {Prefix L1 L2}
+   case L1 of nil then true
+   [] H1|T1 then
+      case L2 of nil then false
+      [] H2|T2 then
+	 if H1 == H2 then {Prefix T1 T2}
+	 else false end
+      end
+   end
+end
+
+fun {FindString L1 L2}
+   local SubPrefix in
+      fun {SubPrefix CurrentList}
+	 case CurrentList of nil then false
+	 [] H|T then
+	    if {Prefix L1 CurrentList} then true
+	    else {SubPrefix T} end
+	 end
+      end
+      case L2 of nil then
+	 case L1 of nil then true
+	 [] H|T then false
+	 end
+      [] H|T then
+	 {SubPrefix L2}
+      end
+   end
+end
+
+{Browse {FindString [5 6 6 7] [6 5 6 7 8]}}

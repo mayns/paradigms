@@ -1,0 +1,22 @@
+declare
+fun {Transform L}
+   local Transformer in	 
+      fun {Transformer Rec Keys Values}
+	 case Keys of nil then Rec
+	 [] H|T then
+	    case Values.1 of H1|T1 then
+	       {Transformer {AdjoinAt Rec H {Transformer {Record.make H1 nil} T1.1 T1.2.1}} T Values.2}
+	    [] M then
+	       {Transformer {AdjoinAt Rec H M} T Values.2}
+	    end
+	 end
+      end
+      case L of H|T then
+	 {Transformer {Record.make H nil} T.1 T.2.1}
+      [] nil then
+	 nil
+      end
+   end
+end
+
+{Browse {Transform [a [a b c] [[a [1] [1]] [a [1] [1]] [a [1] [1]]]]}}

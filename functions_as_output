@@ -1,0 +1,16 @@
+declare
+fun {Build D C}
+   fun {$ I}
+      case D of H|T then
+	 if H == I then C.1
+	 else
+	    {{Build T C.2} I}
+	 end
+      [] nil then 'bottom'
+      end
+   end
+end
+
+F = {Build [1 2 3] [4 5 6]}
+{Browse {F 666}}
+

@@ -1,0 +1,14 @@
+declare
+fun {AppendLists L1 L2}
+   local Reverse RL in
+      fun {Reverse Original Res}
+	 if Original==nil then Res
+	 else
+	    {Reverse Original.2 Original.1|Res}
+	 end
+      end
+      RL = {Reverse L1 nil}
+      {Reverse RL L2}
+   end
+end
+{Browse {AppendLists [1 2 3] [4 5 6]}}

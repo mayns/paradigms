@@ -1,0 +1,15 @@
+
+declare 
+fun {Fact N}
+   local FactList in
+      fun {FactList CurrentNumber FinalList Acc}
+	 if N == 1 then [1]
+	 elseif CurrentNumber == N + 1  then FinalList
+	 else
+	    {FactList CurrentNumber+1 {Append FinalList [Acc * CurrentNumber]} Acc * CurrentNumber}
+	 end
+      end
+      {FactList 1 nil 1}
+   end
+end
+{Browse {Fact 4}}

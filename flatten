@@ -1,0 +1,37 @@
+declare
+fun {FlattenList L}
+   local Iron Flatten Count in
+      fun {Iron List}
+	 case List of H|T then
+	    case H of H1|T1 then
+	       case T1 of nil then
+		  {Iron H1}|{Iron T}
+	       [] H2|T2 then
+		  {Iron H1}|{Iron T1}|{Iron T}
+	       end
+	    [] M then M|{Iron T}
+	    end
+	 [] M then M
+	 end
+      end
+      fun {Count List Counter}
+	 case List of nil then Counter
+	 [] H|T then
+	    case H of H1|T1 then
+	       {Count H Counter+1}
+	    [] M then {Count T Counter}
+	    end
+	 end
+      end
+      
+      fun {Flatten Res}
+	 {Browse Res}
+	 if {Count Res 0}>0 then
+	    {Flatten {Iron Res}}
+	    else Res end
+      end
+      {Flatten L}
+   end
+end 
+
+{Browse {FlattenList [[[[1]] 2] 5]}}
