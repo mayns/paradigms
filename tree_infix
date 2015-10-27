@@ -1,0 +1,14 @@
+declare
+
+B = btree(4 left:btree(2 left:btree(1 left:leaf right:leaf)
+                                   right:btree(3 left:leaf right:leaf))
+	  right:btree(5 left:leaf right:leaf))
+S = btree(4 left:btree(2 left:leaf right:leaf) right:btree(5 left:leaf right:leaf))
+fun {Infix Tree}
+   case Tree of leaf then nil
+   else
+      {Append {Append {Infix Tree.left} [Tree.1]} {Infix Tree.right}}
+   end
+end
+{Browse {Infix btree(42 left:btree(26 left:btree(54 left:leaf right:btree(18 left:leaf right:leaf)) right:leaf) right:btree(37 left:btree(11 left:leaf right:leaf) right:leaf))}}
+
