@@ -1,0 +1,34 @@
+declare
+fun {FromListToTree L}
+   local Helper Insert in
+      fun {Insert K T}
+	 case T of leaf then
+	    btree(K left:leaf right:leaf)
+	 [] btree(X left:T1 right:T2) andthen X==K then
+	    btree(X left:T1 right:T2)
+	 [] btree(X left:T1 right:T2) andthen X<K then
+	    btree(X left:T1 right:{Insert K T2})
+	 [] btree(X left:T1 right:T2) andthen X>K then
+	    btree(X left:{Insert K T1} right:T2)
+	 end
+      end
+      fun {Helper List Tree}
+	 case List of nil then Tree
+	 [] H|T then
+	    {Helper T {Insert H Tree}}
+	 end
+      end
+      {Helper L btree(L.1 left:leaf right:leaf)}
+   end
+end
+
+{Browse {FromListToTree [24 12 42]}}
+
+fun {FromTreeToList T}
+   case T of leaf then nil
+   else
+      {Append {Append {FromTreeToList T.left} [T.1]} {FromTreeToList T.right}}
+   end
+end
+
+{Browse {FromTreeToList {FromListToTree [24 12 42]}}}
