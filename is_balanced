@@ -1,0 +1,45 @@
+declare
+fun {NumLeaves Tree}
+   local Counter in
+      fun {Counter T C}
+	 case T of leaf then 1
+	 [] btree(K left:T1 right:T2) then
+	    {Counter T1 C} + {Counter T2 C}
+	 end
+      end
+      {Counter Tree 0}
+   end
+end
+
+%{Browse {NumLeaves btree(12 left:btree(14 left:leaf right:leaf) right:btree(13 left:leaf right:leaf))}}
+%{Browse {NumLeaves btree(1 left:leaf right:leaf)}}
+
+fun {IsBalanced Tree}
+   case Tree of leaf then true
+   [] btree(K left:T1 right:T2) then
+      if {NumLeaves T1}-{NumLeaves T2}==0 then
+	 {And {IsBalanced T1} {IsBalanced T2}}
+      elseif {NumLeaves T1}-{NumLeaves T2}==1 then
+	 {And {IsBalanced T1} {IsBalanced T2}}
+      elseif {NumLeaves T1}-{NumLeaves T2}==~1 then
+	 {And {IsBalanced T1} {IsBalanced T2}}
+      else
+	 false
+      end
+   end
+end
+
+G = btree(24 left:btree(12 left:leaf right:leaf) right:btree(42 left:leaf right:leaf))
+T = btree(42
+	  left:btree(42
+		     left:btree(42
+				left:btree(42
+					   left:leaf right:leaf)
+				right:btree(42
+					    left:leaf right:leaf))
+		     right:btree(42
+				 left:leaf right:leaf))
+	  right:btree(42 left:leaf right:leaf))
+{Browse T}
+{Browse {IsBalanced btree(42 left:leaf right:leaf)}}
+{Browse {IsBalanced btree(2 left:btree(1 left:leaf right:leaf) right:btree(3 left:leaf right:btree(42 left:leaf right:leaf)))}}
