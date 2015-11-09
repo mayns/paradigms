@@ -1,0 +1,42 @@
+declare GetRefTime Measure Rabbit NaiveRabbit in
+GetRefTime = {Link ['x-oz://boot/Time']}.1.getReferenceTime
+
+fun {NaiveRabbit N}
+   if N == 0 then 2
+   elseif N == 1 then 4
+   elseif N == 2 then 8
+   else {NaiveRabbit N-1}+{NaiveRabbit N-2}+{NaiveRabbit N-3} end
+end
+
+fun {Rabbit N}
+   local TailRabbit in
+      fun {TailRabbit N Acc1 Acc2 Acc3}
+	 if N == 0 then 2
+	 elseif N == 1 then 4
+	 elseif N == 2 then 8
+	 elseif N == 3 then Acc1 + Acc2 + Acc3
+	 else {TailRabbit N-1 Acc2 Acc3 Acc1 + Acc2 + Acc3}
+	 end
+      end
+      {TailRabbit N 2 4 8}
+   end
+end
+
+fun {Measure N}
+   local StartNaive NaiveTime StartTail TailTime R1 R2 in
+      StartNaive = {GetRefTime}
+      R1 = {NaiveRabbit N}
+      NaiveTime = {GetRefTime} - StartNaive
+      StartTail = {GetRefTime}
+      R2 = {Rabbit N}
+      TailTime = {GetRefTime} - StartTail
+      NaiveTime - TailTime
+   end
+end
+
+
+{Browse {Measure 44}}
+
+%{Browse {Rabbit 56}}
+%{Browse {NaiveRabbit 56}}
+

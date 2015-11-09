@@ -1,0 +1,88 @@
+%{Split [a0 a1 a2 a3 ...] L1 L2} binds L1=[a0 a2 ...] and L2=[a1 a3 ...]
+declare Split L1 L2 in
+proc {Split L L1 L2}
+   local Adder in
+      proc {Adder L Counter L1 L2}
+	 case L of nil then
+	    L1 = nil
+	    L2 = nil
+	 [] H|T andthen Counter mod 2 == 0 then
+	    local Res1 Res2 in
+	       {Adder T Counter+1 Res1 Res2}
+	       L1 = H|Res1
+	       L2 = Res2
+	    end
+	 [] H|T andthen Counter mod 2 \= 0 then
+	    local Res1 Res2 in
+	       {Adder T Counter+1 Res1 Res2}
+	       L1 = Res1
+	       L2 = H|Res2
+	    end
+	 end
+      end
+      {Adder L 0 L1 L2}
+   end
+end
+
+{Split [0 1 2 3 4 5 6 7] L1 L2}
+{Browse L1}
+{Browse L2}
+
+declare
+% {Reduction [a0 a1 a2 a3 a4 a5 ...] A B C D} = A*a0+B*a1+C*a2+D*a3+A*a4+....
+fun {Reduction L A B C D}
+   case L of nil then 0
+   [] H|T then
+      local Sum MapMult List1 List2 ListA ListB ListC ListD in
+	 {Split L List1 List2}
+	 {Split List1 ListA ListC}
+	 {Split List2 ListB ListD}
+	 fun {MapMult List N}
+	    case List of nil then nil
+	    [] H|T then
+	       H*N|{MapMult T N}
+	    end
+	 end
+	 fun {Sum List}
+	    local ReduceSum in
+	       fun {ReduceSum L R}
+		  case L of nil then R
+		  [] H|T then
+		     {ReduceSum T R+H}
+		  end
+	       end
+	       {ReduceSum List 0}
+	    end
+	 end
+	 {Sum {Flatten {MapMult ListA A}|{MapMult ListB B}|{MapMult ListC C}|{MapMult ListD D}}}
+      end
+   end
+end
+
+{Browse {Reduction nil 1 0 0 0}}
+
+declare
+fun {MapMult List N}
+   case List of nil then nil
+   [] H|T then
+      H*N|{MapMult T N}
+   end
+end
+
+fun {Sum List}
+   local ReduceSum in
+      fun {ReduceSum L R}
+	 case L of nil then R
+	 [] H|T then
+	    {ReduceSum T R+H}
+	 end
+      end
+      {ReduceSum List 0}
+   end
+end
+
+
+{Browse {MapMult [1 2 3] 2}}
+{Browse {Sum [1 2 3 4]}}
+
+{Browse [1 2 3]|[4 5 6]}
