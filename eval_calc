@@ -1,0 +1,48 @@
+declare
+fun {NewStack} {NewCell nil} end
+proc {Push S X}
+   S:=X|@S
+end
+fun {Pop S}
+   case @S of nil then nil
+   [] H|T then
+      S:=T
+      H
+   end
+end
+fun {IsEmpty S} @S==nil end
+
+fun {Eval L}
+   local InitStack ResultStack Temp CurrentValue Reversed in
+      InitStack = {NewStack}
+      ResultStack = {NewStack}
+      Reversed = {NewStack}
+      Temp = {NewCell 0}
+      CurrentValue = {NewCell 0}
+      for E in L do
+	 {Push Reversed E}
+      end
+      for until:{IsEmpty Reversed} do
+	 {Push InitStack {Pop Reversed}}
+      end
+      for until:{IsEmpty InitStack} do
+	 CurrentValue:={Pop InitStack}
+	 if @CurrentValue == '+' then
+	    {Push ResultStack ({Pop ResultStack} + {Pop ResultStack})}
+	 elseif @CurrentValue == '-' then
+	    Temp:={Pop ResultStack}
+	    {Push ResultStack ({Pop ResultStack} - @Temp)}
+	 elseif @CurrentValue == '*' then
+	    {Push ResultStack ({Pop ResultStack} * {Pop ResultStack})}
+	 elseif @CurrentValue == '/' then
+	    Temp:={Pop ResultStack}
+	    {Push ResultStack ({Pop ResultStack} div @Temp)}
+	 else
+	    {Push ResultStack @CurrentValue}
+	 end
+      end
+      {Pop ResultStack}
+   end
+end
+
+{Browse {Eval [2 3 '+' 4 '*' 10 '/']}}

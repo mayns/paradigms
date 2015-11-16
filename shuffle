@@ -1,0 +1,29 @@
+declare
+fun {Shuffle L}
+   local C Len I Temp R G Res in
+      Len = {Length L}
+      C = {NewArray 1 Len 0}
+      I = {NewCell 1}
+      Temp = {NewCell 0}
+      R = {NewCell 0}
+      G = {NewCell 0}
+      Res = {NewCell nil}
+      for E in L do
+	 C.@I:=E
+	 I:=@I+1
+      end
+      for E in 1..Len do
+	 R:={Number.abs ({OS.rand} mod Len) } + 1
+	 G:={Number.abs ({OS.rand} mod Len)} + 1
+	 Temp:=C.@R
+	 C.@R:=C.@G
+	 C.@G:=@Temp
+      end
+      for E in 1..Len do
+	 Res:={Append @Res [C.E]}
+      end
+      @Res
+   end
+end
+
+{Browse {Shuffle [1 2 3]}}
