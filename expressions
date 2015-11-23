@@ -1,0 +1,83 @@
+declare
+class Addition
+   attr x y
+   meth init(A B)
+      x:=A
+      y:=B
+   end
+   meth evaluate($)
+      local A B in
+	 {@x evaluate(A)}
+	 {@y evaluate(B)}
+	 A + B
+      end
+   end
+end
+class Subtraction
+   attr x y
+   meth init(A B)
+      x:=A
+      y:=B
+   end
+   meth evaluate($)
+      local A B in
+	 {@x evaluate(A)}
+	 {@y evaluate(B)}
+	 A - B
+      end
+   end
+end
+class Multiplication
+   attr x y
+   meth init(A B)
+      x:=A
+      y:=B
+   end
+   meth evaluate($)
+      local A B in
+	 {@x evaluate(A)}
+	 {@y evaluate(B)}
+	 A * B
+      end
+   end
+end
+
+class Division
+   attr x y
+   meth init(A B)
+      x:=A
+      y:=B
+   end
+   meth evaluate($)
+      local A B in
+	 {@x evaluate(A)}
+	 {@y evaluate(B)}
+	 A div B
+      end
+   end
+end
+class Variable
+   attr val
+   meth init(A) val:=A end
+   meth set(A) val:=A end
+   meth evaluate($) @val end
+end
+class Constant
+   attr val
+   meth init(A) val:=A end
+   meth evaluate($) @val end
+end
+
+VarX = {New Variable init(0)}
+VarY = {New Variable init(0)}
+local
+   Result
+   C = {New Constant init(6)}
+   Expr1 = {New Addition init(VarX VarY)}
+   Expr2 = {New Division init(Expr1 C)}
+in
+   {VarX set(3)}
+   {VarY set(4)}
+   {Expr2 evaluate(Result)}
+   {Browse Result}
+end

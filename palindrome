@@ -1,0 +1,68 @@
+declare
+class Sequence
+   attr seq
+   meth init() seq:=nil end
+   meth isEmpty($) @seq==nil end
+   meth first($) @seq.1 end
+   meth last($) {Nth @seq {Length @seq}} end
+   meth insertFirst(X) seq:=X|@seq end
+   meth insertLast(X) seq:={Append @seq [X]} end
+   meth removeFirst()
+      case @seq of nil then skip
+      [] H|T then
+	 seq:=T
+      end
+   end
+   meth removeLast()
+      case @seq of nil then skip
+      [] H|T then
+	 local Rev in
+	    Rev = {NewCell nil}
+	    for E in @seq do
+	       Rev:=E|@Rev
+	    end
+	    seq:=nil
+	    for E in @Rev.2 do
+	       seq:=E|@seq
+	    end
+	 end
+      end
+   end
+end
+
+fun {Palindrome Xs}
+   S={New Sequence init}
+   fun {Check}
+      local CheckMore Result in
+	 CheckMore = {NewCell true}
+	 Result = {NewCell false}
+	 for while:@CheckMore do
+	    local Empty First Last in
+	       {S isEmpty(Empty)}
+	       if Empty then
+		  CheckMore:=false
+		  Result:=true
+	       else
+		  {S first(First)}
+		  {S last(Last)}
+		  if First==Last then
+		     {S removeFirst()}
+		     {S removeLast()}
+		  else
+		     CheckMore:=false
+		  end
+	       end
+	    end
+	 end
+	 @Result
+      end
+   end
+in
+   for E in Xs do
+      {S insertLast(E)}
+   end
+   {Check}
+end
+
+
+{Browse {Palindrome [1 2 32 1]}}

@@ -1,0 +1,60 @@
+declare
+class Collection
+   attr lib
+   meth init lib:=nil end
+   meth put(X) lib:=X|@lib end
+   meth get($)
+      case @lib of nil then nil
+      [] H|T then
+	 lib:=T
+	 H
+      end
+   end
+   meth isEmpty($) @lib==nil end
+   meth union(C)
+      local Flag Reversed in
+	 Flag = {NewCell true}
+	 Reversed = {NewCell nil}
+	 for while:@Flag do
+	    local E in
+	       {C get(E)}
+	       case E of nil then
+		  Flag:=false
+	       [] M then
+		  Reversed:=M|@Reversed
+	       end
+            end
+	 end
+	 for E in @Reversed do
+	    lib:=E|@lib
+	 end
+      end
+   end
+end
+
+C = {New Collection init}
+{C put(1)}
+{C put(2)}
+{C put(3)}
+{C put(4)}
+A = {New Collection init}
+{A put(6)}
+{A put(7)}
+{A union(C)}
+local E in
+   {C isEmpty(E)}
+   {Browse E}
+end
+local IsAEmpty in
+   IsAEmpty = {NewCell false}
+   for until:@IsAEmpty do
+      local E in
+	 {A get(E)}
+	 case E of nil then
+	    IsAEmpty:=false
+	 else
+	    {Browse E}
+	 end
+      end
+   end
+end

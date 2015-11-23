@@ -1,0 +1,56 @@
+declare
+class Stack
+   attr s
+   meth init() s:=nil end
+   meth size($) {Length @s} end
+   meth isEmpty($) @s==nil end
+   meth top($)
+      case @s of nil then
+	 raise emptyStackException('Stack is empty!') end
+      [] H|T then
+	 H
+      end
+   end
+   meth push(X) s:=X|@s end
+   meth pop($)
+      case @s of nil then
+	 raise emptyStackException('Stack is empty!') end
+      [] H|T then
+	 s:=T
+	 H
+      end
+   end
+end
+
+class Queue
+   attr q
+   meth init() q:=nil end
+   meth size($) {Length @q} end 
+   meth isEmpty($) @q==nil end
+   meth front($)
+      case @q of nil then
+	 raise emptyQueueException('Queue is empty!') end
+      [] H|T then
+	 H
+      end
+   end
+   meth enqueue(X) q:={Append @q [X]} end
+   meth dequeue($)
+      case @q of nil then
+	 raise emptyQueueException('Queue is empty!') end
+      [] H|T then
+	 q:=T
+	 H
+      end
+   end
+end
+
+C = {New Queue init}
+{C enqueue(4)}
+{C enqueue(3)}
+local F in
+   try
+      {C front(F)}
+      {Browse F}
+   catch X then {Browse X} end
+end
