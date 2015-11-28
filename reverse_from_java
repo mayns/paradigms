@@ -1,0 +1,15 @@
+%Think about the fact that the argument can be passed as a reference or as a value (it is the key of this exercise). If you have to create a cell to represent that, call it I (uppercase i). Note that the local used to declare I is not the same local used to declare Temp.
+																																dedeclare
+fun {Reverse S}
+   local I={NewCell S} in
+      local Temp={NewCell nil} in
+	 for C in @I do
+	    Temp:=C|@Temp
+	 end
+	 @Temp
+      end
+   end
+end
+
+{Browse {Reverse [1 2 4]}}
+																																	       
