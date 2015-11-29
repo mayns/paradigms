@@ -1,0 +1,42 @@
+%In this exercise, you will have to track characters in a stream. In order to do that, you have to create a filter (named Counter) that takes a stream of characters as input and returns another stream in which every element is a list of couple "Character"#"Number of time this Character appears".
+
+%For instance, from the stream a|b|a|c|_, the filter Counter produces: [a#1]|[a#1 b#1]|[a#2 b#1]|[a#2 b#1 c#1]|_
+
+%When Counter is created, you have to write (exactly) the following test line:
+%        local InS X in X = {Counter InS} InS = a|b|a|c|_ {Delay 2000} {Browse X} end
+
+declare
+fun {Counter S}
+   local History InnerCounter in
+      History = {NewCell nil}
+      fun {InnerCounter S1}
+	 local Res Met in
+	    Res={NewCell nil}
+	    Met={NewCell false}
+	    case S1 of X|S2 then
+	       for E in @History do
+		  case E of C#N then
+		     if C == X then
+			Res:={Append @Res [C#N+1]}
+			Met:=true
+		     else
+			Res:={Append @Res [C#N]}
+		     end
+		  end
+	       end
+	       if @Met then skip
+	       else
+		  Res:={Append @Res [X#1]}
+	       end
+	       History:=@Res
+	       @History|{InnerCounter S2}
+	    else nil
+	    end
+	 end
+      end
+      thread {InnerCounter S} end
+   end
+end
+
+
+local InS X in X = {Counter InS} InS = a|a|a|a|a|nil {Delay 2000} {Browse X} end
