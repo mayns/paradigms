@@ -1,0 +1,59 @@
+declare
+
+fun {CellProcess S M}
+   case M of assign(New) then New
+   [] access(Old) then Old=S S
+   end
+end
+
+fun {NewAgent Process InitState}
+   Port Stream
+in
+   Port = {NewPort Stream}
+   thread
+      % Execute Agent
+      proc {Execute State Stream}
+	 case Stream of M|Rest then
+	    NewState = {Process State M}
+	 in
+	    {Execute NewState Rest}
+	 end
+      end
+   in
+      {Execute InitState Stream}
+   end
+   Port
+   % Or a procedure
+   %proc {$ M} {Send Port M} end
+end
+
+declare Cell
+Cell = {NewAgent CellProcess 0}
+{Send Cell assign(1)}
+{Browse {Send Cell access($)}}
+
+% Broadcaster Agent
+fun {BF S M}
+   case M of init(As) then state(agents:As)
+   [] broadcast(M1) then
+      for A in S.agents do
+	 {A M1}
+      end
+      S
+   else S
+   end
+end
+
+fun {BrowseF S M}
+   {Browse (S.name)#M}
+   S
+end
+
+BroadCaster = {NewAgent BF state}
+As = for I in 1..10 collect:C do
+	{C {NewAgent BrowseF state(name:I)}}
+     end
+
+{BroadCaster init(As)}
+{BroadCaster broadcast(a)}
+

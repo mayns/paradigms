@@ -1,0 +1,46 @@
+declare
+class Tree
+   attr value left right
+   meth init(V)
+      value:=V
+      left:=leaf
+      right:=leaf
+   end
+   meth setLeft(T) left:=T end
+   meth setRight(T) right:=T end
+   meth setValue(V) value:=V end
+   meth getLeft($) @left end
+   meth getRight($) @right end
+   meth getValue($) @value end
+   meth isBalanced($)
+      local NumLeaves Balanced in
+	 fun {NumLeaves Tree}
+	    local Counter in
+	       fun {Counter T C}
+		  case T of leaf then 1
+		  [] Tree then
+		     {Counter {T getLeft($)} C} + {Counter {T getRight($)} C}
+		  end
+	       end
+	       {Counter Tree 0}
+	    end
+	 end
+	 fun {Balanced T}
+	    case T of leaf then true
+	    [] Tree then
+	       local N = {NumLeaves {T getLeft($)}} - {NumLeaves {T getRight($)}} in
+		  if N == 0 orelse N==1 orelse N==~1 then
+		     {And {Balanced {T getLeft($)}} {Balanced {T getRight($)}}}
+		  else
+		     false
+		  end
+	       end
+	    end
+	 end
+	 {Balanced self}
+      end
+   end
+end
+
+T = {New Tree init(5)}
+{Browse {T isBalanced($)}}

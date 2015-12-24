@@ -1,0 +1,21 @@
+declare
+% Master
+choose(pos:FN id:Agent) then Rs Reply in
+Rs = {Map S.agents
+      fun {$ Slave} A in
+	 {Slave request(floor:FN answer:A)}
+	 A
+      end}
+Reply = {Minimize Rs}
+Agent = Reply.id
+for R in Rs do
+   R.answer = if Agent == R.id then reserve
+	      else reject end
+end
+
+% A = status(id:Agent pos:AState answer:X) - answer format
+
+% Slave
+request(floor:F answer:R) then Ans in
+R = status(id:S.id pos:{Abs S.pos-F} answer:Ans)
+{Wait Ans}

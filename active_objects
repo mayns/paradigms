@@ -1,0 +1,34 @@
+declare
+class BankAccount
+   attr balance:0
+   meth init(N) balance:=N end
+   meth withdraw(N)
+      if @balance >= N then
+	 balance:=@balance - N
+      end
+   end
+   meth deposit(N)
+      balance:=@balance + N
+   end
+   meth balance($)
+      @balance
+   end
+   % ignore other messages
+   meth otherwise(M) {Browse M} end
+end
+
+BP = {NewAgent BankAccount init(0)}
+{BP deposit(100)}
+{BP deposit(50)}
+{BP withdraw(50)}
+{Browse {BP balance($)}}
+
+fun {NewAgentC Class Init}
+   P Obj = {New Class Init} in
+   thread S in
+      P = {NewPort S}
+      for M in S do {Obj M} end
+   end
+   proc {$ M} {Send P M} end
+end
+

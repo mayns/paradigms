@@ -1,0 +1,35 @@
+declare
+fun {Eval Port}
+   local StreamHandler P S in
+      P = {NewPort S}
+      proc {StreamHandler InStream}
+	 case InStream of nil then {Send Port nil}
+	 [] H|T then
+	    case H of Function#Input then
+	       {Send Port {Function Input}}
+	    end
+	    {StreamHandler T}
+	 end
+      end
+      thread {StreamHandler S} end
+      P
+   end
+end
+
+local InPort OutStream OutPort in
+    OutPort = {NewPort OutStream}
+    InPort = {Eval OutPort}
+    thread {Browse OutStream} end
+
+    local PlusOne PlusTwo in
+        PlusOne = proc {$ N R} R = N + 1 end
+        {Send InPort PlusOne#1}
+        {Send InPort PlusOne#2}
+        {Send InPort PlusOne#3}
+
+        PlusTwo = proc {$ N R} R = N + 2 end
+        {Send InPort PlusTwo#1}
+        {Send InPort PlusTwo#2}
+        {Send InPort PlusTwo#3}
+    end
+end 

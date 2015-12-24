@@ -1,0 +1,60 @@
+declare
+
+fun {Filter Xs K}
+   case Xs of X|Xr then
+      if X mod K \= 0 then X|{Filter Xr K}
+      else {Filter Xr K} end
+   else nil
+   end
+end
+fun {Sieve Xs}
+   case Xs of nil then nil
+   [] X|Xr then
+      X|{Sieve thread {Filter Xr X} end}
+   end
+end
+fun {Producer N}
+   local Prod in
+      fun {Prod C}
+	 if C == N then C|nil
+	 else
+	    C|{Prod C+1}
+	 end
+      end
+      {Prod 1}
+   end
+end
+
+fun {Prod Min Max}
+   local Producer in
+      fun {Producer M}
+	 if M == Max then M|nil
+	 else
+	    M|{Producer M+1}
+	 end
+      end
+      {Producer Min}
+   end
+end
+fun {NotPrime S1 S2}
+   case S1 of nil then nil
+   [] X|Xr then
+      case S2 of nil then
+	 S1
+      [] X2|X2r then
+	 if X < X2 then
+	    X|{NotPrime Xr S2}
+	 elseif X >= X2 then
+	    {NotPrime Xr X2r}
+	 end
+      end
+   end
+end
+
+declare Xs Ys Zs in
+thread Xs = {Prod 2 12} end
+thread Ys = {Sieve Xs} end
+thread Zs = {NotPrime Xs Ys} end
+{Browse Xs}
+{Browse Ys}
+{Browse Zs}
