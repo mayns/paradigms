@@ -1,0 +1,62 @@
+declare
+
+proc {Add S}
+   thread
+      case S of H|T then
+	 for E in S do
+	    case E of r('add' X Y R) then
+	       R = X + Y
+	    else skip
+	    end
+	 end
+      end
+   end
+end
+
+proc {Sub S}
+   thread
+      case S of H|T then
+	 for E in S do
+	    case E of r('sub' X Y R) then
+	       R = X - Y
+	    else skip
+	    end
+	 end
+      end
+   end
+end
+
+proc {Mul S}
+   thread
+      case S of H|T then
+	 for E in S do
+	    case E of r('mul' X Y R) then
+	       R = X * Y
+	    else skip
+	    end
+	 end
+      end
+   end
+end
+
+proc {Divi S}
+   thread
+      case S of H|T then
+	 for E in S do
+	    case E of r('divi' X Y R) then
+	       R = X div Y
+	    else skip
+	    end
+	 end
+      end
+   end
+end
+
+local S in
+   {Add S}
+   {Sub S}
+   {Mul S}
+   {Divi S}
+   S = r('add' 1 2 _)|r('sub' 10 5 _)|r('sub' 5 5 _)|r('mul' 5 6 _)|r('divi' 4 2 _)|_
+   {Browse S} % Displays: r('add' 1 2 3)|r('sub' 10 5 5)|r('sub' 5 5 0)|_
+end

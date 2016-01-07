@@ -1,0 +1,78 @@
+declare
+
+class List
+   attr list
+   meth init(L) list:=L end
+   meth isEven(I $)
+      {Nth @list I+1} mod 2 == 0
+   end
+   meth get(I $)
+      {Nth @list I+1}
+   end
+   meth getList($) @list end
+end
+
+fun {Producer M N}
+   local Prod in
+      fun {Prod C}
+	 if C == N then nil
+	 else
+	    local L in
+	       L = {NewCell nil}
+	       for I in 1..M do
+		  L := {OS.rand}|@L
+	       end
+	       {New List init(@L)}|{Prod C + 1}
+	    end
+	 end
+      end
+      {Prod 0}
+   end	 	       
+end
+
+fun {Filter S J}
+   case S of nil then nil
+   [] X|S2 then
+      if {X isEven(J $)} then
+	 X|{Filter S2 J}
+      else
+	 {Filter S2 J}
+      end
+   end
+end
+
+fun {Consumer P S1 S2}
+   local Cons in
+      fun {Cons Stream1 Stream2}
+	 case Stream1#Stream2 of nil#nil then nil
+	 [] (S|Sr)#nil then Stream1
+	 [] nil#(S|Sr) then Stream2
+	 [] (X|Xx)#(Y|Yy) then
+	    if {X get(P $)} =< {Y get(P $)} then
+	       X|Y|{Cons Xx Yy}
+	    else
+	       Y|X|{Cons Xx Yy}
+	    end
+	 end
+      end
+      {Cons S1 S2}
+   end
+end
+
+fun {GetListMap L}
+   case L of nil then nil
+   [] H|T then
+      {H getList($)}|{GetListMap T}
+   end
+end
+
+local S1 S2 S3 in
+   thread S1 = {Producer 3 4} end
+   thread S2 = {Filter S1 0} end
+   thread S3 = {Consumer 2 S1 S2} end
+   {Browse {GetListMap S1}}
+   {Browse {GetListMap S2}}
+   {Browse {GetListMap S3}}
+end
+
+      

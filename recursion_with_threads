@@ -1,0 +1,13 @@
+declare
+fun {RecThreads X Acc}
+   if X =< 0 then Acc
+   else
+      local Y in
+         thread Y = {RecThreads X-1 Acc+X} end
+         thread {RecThreads X-1 Y} end
+      end
+   end
+end
+
+{Browse {RecThreads 10 0}}
+% When execution terminates, how many times RecThreads is called? 2047 - WHY?
